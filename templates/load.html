@@ -1,0 +1,139 @@
+{% extends "layout.html" %}
+
+{% block title %}Index{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+
+{% block content %}
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">Octopus UI</a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <div class="navbar-form navbar-right" role="search">
+                    <button class="btn btn-md btn-warning" data-toggle="modal" data-target="#saveTest">Save test</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="row">
+            <div class="col-md-12">
+                <div>
+                </div>
+                <form class="device-form form-inline col-xs-8 col-xs-offset-2">
+                  <div class="form-group">
+                      <label for="serial_opt">Select a device: </label>
+                      <select class="form-control input-sm" id="serial_opt">
+                          <option value="null">Select a device</option>
+                          {% for serial in seriales: %}
+                          <option value="{{serial}}">
+                            {{seriales[serial]['properties']['gsm.sim.operator.alpha']|upper}} |
+                            {{seriales[serial]['properties']['product.manufacturer']|upper}} |
+                            {{seriales[serial]['properties']['product.model']}} |  
+                            {{serial}}</option>
+                          {% endfor %}
+                      </select>
+                  </div>
+                  <div class="form-group">
+                      <label for="refresh">Refresh: </label>
+                      <a href="#" id="refresh" class="btn btn-info btn-sm" id="btn_refresh"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></a>
+                  </div>
+                  <div class="form-group">
+                      <a class="btn btn-success btn-sm" id="list" href="{{ url_for('save') }}">List of tests</a>
+                  </div>
+                </form>
+            </div>
+      <div class="col-md-12">
+          <iframe id="page" src="" style="width:100%;height:1000px;"></iframe>
+      </div>
+
+        <!-- Old form
+        <div class="col-xs-8 col-xs-offset-2">
+            <form action="{{ url_for('save') }}" method="post">
+                <div class="form-group">
+                    <label for="myconsole">Script:</label>
+                    <textarea class="form-control input-sm" name="myconsole" style="width:100%;height:200px;background-color:#F2F5A9;" id="myconsole">
+                    </textarea>
+                </div>
+                <div class="form-group">
+                    <label for="subject">E-mails subject:</label>
+                    <input class="form-control input-sm" type="text" name="subject" id="subject" />
+                </div>
+                <div class="form-group">
+                    <label for="emails">E-mails separated by(,):</label>
+                    <div class="row">
+                        <div class="col-sm-10">
+                            <input class="form-control input-sm" type="text" name="email" id="emails" />
+                        </div>
+                        <div class="col-xs-2">
+                            <button class="btn btn-warning btn-sm" type="button" id="add_emails">Add emails</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-sm btn-success" type="submit" name="submit" id="save_script">Save script</button>
+                </div>
+            </form>
+        </div>
+        -->
+    </div>
+
+
+    <!-- Start Modal -->
+    <div class="modal fade" tabindex="-1" role="dialog" id="saveTest">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="{{ url_for('save') }}" method="post" id="scriptForm">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Save this test</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="myconsole">Script:</label>
+                            <textarea class="form-control input-sm" name="myconsole" id="myconsole" required>
+                            </textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="subject">E-mails subject:</label>
+                            <input class="form-control input-sm" type="text" name="subject" id="subject" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="emails">E-mails separated by(,):</label>
+                            <div class="row">
+                                <div class="col-sm-9">
+                                    <input class="form-control input-sm" type="text" name="emails" id="emails" required />
+                                </div>
+                                <div class="col-xs-3">
+                                    <button class="btn btn-warning btn-sm" type="button" id="add_emails">Add emails</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" name="submit" id="save_script" class="btn btn-primary">Save script</button>
+                    </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog --> 
+    </div><!-- /.modal -->
+    <!-- End Modal -->
+
+{% endblock %}
+
+
+{% block scripts %}
+  <script src="{{ url_for('static', filename='js/load.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/jquery.validate.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/validate.js') }}"></script>
+{% endblock %}

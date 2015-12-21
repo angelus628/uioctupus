@@ -1,0 +1,66 @@
+{% extends "layout.html" %}
+
+{% block title %}Index{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-xs-12">
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <a class="navbar-brand" href="/">Octopus UI</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12" >
+          <div class="row">
+              <div class="col-xs-offset-1 col-xs-3">
+                <strong>List of tests</strong>
+              </div>
+              <div class="col-xs-3">
+                <a class="btn btn-success btn-sm" href="{{ url_for('index') }}" >Create a new test</a>
+              </div>
+          </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12" >
+          <table class="table table-hover table-condense" id="scripts">
+              <thead>
+              <tr>
+                  <th># ID</th>
+                  <th>Name</th>
+                  <th>Created on</th>
+                  <!-- <th>Path to file</th> -->
+                  <th>Actions</th>
+              </tr>
+              </thead>
+              <tbody>
+              {% for script in scripts %}
+              <tr>
+                  <td>{{ script[0] }}</td>
+                  <td>{{ script[1] }}</td>
+                  <td>{{ script[3] }}</td>
+                  <!-- <td>{{ script[4] }}</td> -->
+                  <td>
+                      <button class="btn btn-info btn-sm ejecutar" id="{{ script[4] }}">Execute</button>
+                  </td>
+              </tr>
+              {% endfor %}
+              </tbody>
+          </table>
+      </div>
+    </div>
+{% endblock %}
+
+
+{% block scripts %}
+  <script src="{{ url_for('static', filename='js/list.js') }}"></script>
+{% endblock %}

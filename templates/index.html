@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+
+<!-- Macro -->
+{% macro render_child(tree) -%}
+  <ul class="list-group">
+    <li id="list-active" class="list-group-item active">
+        <h4 class="list-group-item-heading">Select an element to perform the action:</h4>
+    </li>
+      {% for item in tree  %}
+        <li class="list-group-item">
+        <a data-info='{ {% for k, v in item.attrib.items() %}"{{ k }}":"{{ v|urlencode }}",{% endfor %}}' class="show-info">
+                Class: <strong>{{ item.attrib.class.replace('android.widget.', '').replace('android.view.', '') }}</strong> 
+                | Bounds: {{ item.attrib.bounds }}
+                | Clickable: {{item.attrib.clickable}}
+            </a>
+        </li>
+      {% endfor %}
+  </ul>
+{%- endmacro %}
+<!-- Macro -->
+
+{% block title %}Index{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+      <div class="col-md-8" >
+          <div class="panel panel-default">
+              <div class="panel-heading">
+                  <h3 class="panel-title"><strong>Position: [<span id="mvcoords"></span>]</strong></h3>
+              </div>
+              <div class="panel-body">
+                  <div id="screen" data-serial="{{serial}}" data-info="{{ device_info }}" style="width:{{ device_info.displayWidth }}px;height:{{ device_info.displayHeight}}px;background:url({{ url_for('static', filename=file) }}?v={{rd}})">
+                    <div id="rect" ></div>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div class="col-md-4" >
+          <div class="panel panel-default">
+              <div class="panel-heading">
+                  <h3 class="panel-title">
+                      <strong>UI Actions: </strong>
+                      <button class="btn btn-primary btn-sm" id="click_el">Click</button>
+                      <button class="btn btn-primary btn-sm" id="add_text">Add text</button>
+                      <button class="btn btn-primary btn-sm" id="add_scroll">Scroll down</button>
+                      <button class="btn btn-primary btn-sm" id="take_screenshot">Take screenshot</button>
+                  </h3>
+              </div>
+              <div class="panel-body">
+                  <div class="tree">
+                    <button class="btn btn-warning btn-sm" id="all">Toggle all </button>
+                    {{ render_child(xml) }}
+                  </div>
+                  <div  id="info"></div>
+              </div>
+          </div>
+      </div>
+  </div>
+{% endblock %}
+
+
+{% block scripts %}
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% endblock %}
