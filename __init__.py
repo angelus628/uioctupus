@@ -3,8 +3,7 @@ from subprocess import  check_output, call
 from uiautomator import  Device
 from shutil import copyfile
 import xml.etree.ElementTree as ET
-import time, random, os, re, sqlite3
-import json 
+import time, random, os, re, sqlite3, json
 
 app = Flask(__name__)
 
@@ -160,6 +159,18 @@ def swipe():
             int(request.args.get('x1')),
             int(request.args.get('y1')))
     return 'ok'
+
+@app.route('/geturl', methods=['GET'])
+def geturl():
+    serial = request.args.get('serial')
+    rId    = 'com.android.chrome:id/url_bar'
+    if( serial is not '' and serial is not None ):
+        d = Device(serial)
+        if d.exists(resourceId=rId):
+            return d(resourceId=rId).info['text']
+        
+    return '#nok'
+
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')

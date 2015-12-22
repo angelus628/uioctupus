@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block content %}
-    <nav class="navbar navbar-default">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
@@ -19,72 +19,34 @@
             </div>
 
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <div class="navbar-form navbar-right" role="search">
-                    <button class="btn btn-md btn-warning" data-toggle="modal" data-target="#saveTest">Save test</button>
-                </div>
+                <form class="navbar-form navbar-left" role="search">
+                    <div class="form-group">
+                        <!-- <label for="serial_opt">Select a device: </label> -->
+                        <select class="form-control input-sm" id="serial_opt">
+                            <option value="null">SELECT A DEVICE</option>
+                            {% for serial in seriales: %}
+                                <option value="{{serial}}">
+                                    {{seriales[serial]['properties']['gsm.sim.operator.alpha']|upper}} |
+                                    {{seriales[serial]['properties']['product.manufacturer']|upper}} |
+                                    {{seriales[serial]['properties']['product.model']}} |  
+                                    {{serial}}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </form>
+                <ul class="nav navbar-nav">
+                    <li><a href="#" id="refresh">Refresh <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></a></li>
+                    <li><a href="{{ url_for('save') }}">List of tests <span class="glyphicon glyphicon-list" aria-hidden="true"></span></a></li>
+                    <li><a href="#" data-toggle="modal" data-target="#saveTest">Save test <span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span></a></li>
+                </ul>
             </div>
         </div>
     </nav>
     <div class="row">
-            <div class="col-md-12">
-                <div>
-                </div>
-                <form class="device-form form-inline col-xs-8 col-xs-offset-2">
-                  <div class="form-group">
-                      <label for="serial_opt">Select a device: </label>
-                      <select class="form-control input-sm" id="serial_opt">
-                          <option value="null">Select a device</option>
-                          {% for serial in seriales: %}
-                          <option value="{{serial}}">
-                            {{seriales[serial]['properties']['gsm.sim.operator.alpha']|upper}} |
-                            {{seriales[serial]['properties']['product.manufacturer']|upper}} |
-                            {{seriales[serial]['properties']['product.model']}} |  
-                            {{serial}}</option>
-                          {% endfor %}
-                      </select>
-                  </div>
-                  <div class="form-group">
-                      <label for="refresh">Refresh: </label>
-                      <a href="#" id="refresh" class="btn btn-info btn-sm" id="btn_refresh"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></a>
-                  </div>
-                  <div class="form-group">
-                      <a class="btn btn-success btn-sm" id="list" href="{{ url_for('save') }}">List of tests</a>
-                  </div>
-                </form>
-            </div>
       <div class="col-md-12">
           <iframe id="page" src="" style="width:100%;height:1000px;"></iframe>
       </div>
-
-        <!-- Old form
-        <div class="col-xs-8 col-xs-offset-2">
-            <form action="{{ url_for('save') }}" method="post">
-                <div class="form-group">
-                    <label for="myconsole">Script:</label>
-                    <textarea class="form-control input-sm" name="myconsole" style="width:100%;height:200px;background-color:#F2F5A9;" id="myconsole">
-                    </textarea>
-                </div>
-                <div class="form-group">
-                    <label for="subject">E-mails subject:</label>
-                    <input class="form-control input-sm" type="text" name="subject" id="subject" />
-                </div>
-                <div class="form-group">
-                    <label for="emails">E-mails separated by(,):</label>
-                    <div class="row">
-                        <div class="col-sm-10">
-                            <input class="form-control input-sm" type="text" name="email" id="emails" />
-                        </div>
-                        <div class="col-xs-2">
-                            <button class="btn btn-warning btn-sm" type="button" id="add_emails">Add emails</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <button class="btn btn-sm btn-success" type="submit" name="submit" id="save_script">Save script</button>
-                </div>
-            </form>
-        </div>
-        -->
     </div>
 
 

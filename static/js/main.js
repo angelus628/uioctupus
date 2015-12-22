@@ -1,3 +1,5 @@
+
+var iText = '';
 $( document ).ready( function( ) {
     $( '.tree li' ).each( function() {
         if( $( this ).children( 'ul' ).length > 0 ) {
@@ -41,27 +43,30 @@ $( document ).ready( function( ) {
             new_attr.text = new_attr.text.split(' ')[0]
 
             if(typeof new_attr.resource_id != 'undefined'){
-                text += "d(resourceId=\""+new_attr.resource_id+"\").clear_text()\n";
-                text += "d(resourceId=\""+new_attr.resource_id+"\").set_text(\""+own_text+"\")\n";
-                param_op = 0;
-                param_text = new_attr.resource_id;
+                text       += "iText = \"Navigate to: \" + d(resourceId=\""+new_attr.resource_id+"\").info['text'] + \"<br>\"\n";
+                text       += "d(resourceId=\""+new_attr.resource_id+"\").clear_text()\n";
+                text       += "d(resourceId=\""+new_attr.resource_id+"\").set_text(\""+own_text+"\")\n";
+                param_op    = 0;
+                param_text  = new_attr.resource_id;
                 param_value = own_text;
             }
             else if(new_attr.text !== '') {
-                text += "d(textContains=\""+new_attr.text+"\", className=\"" + new_attr.class + "\").clear_text()\n";
-                text += "d(textContains=\""+new_attr.text+"\", className=\"" + new_attr.class + "\").set_text(\""+own_text+"\")\n";
-                param_op = 1;
-                param_text = new_attr.text;
+                text       += "iText = \"Navigate to: \" + d(textContains=\""+new_attr.text+"\", className=\"" + new_attr.class + "\").info['text'] + '<br>'\n";
+                text       += "d(textContains=\""+new_attr.text+"\", className=\"" + new_attr.class + "\").clear_text()\n";
+                text       += "d(textContains=\""+new_attr.text+"\", className=\"" + new_attr.class + "\").set_text(\""+own_text+"\")\n";
+                param_op    = 1;
+                param_text  = new_attr.text;
                 param_value = own_text;
             } else if (new_attr.content_desc !== '' && new_attr.content_desc.indexOf('&') == -1 ) {
-                text += "d(description=\""+new_attr.content_desc+"\", className=\"" + new_attr.class + "\").clear_text()\n";
-                text += "d(description=\""+new_attr.content_desc+"\", className=\"" + new_attr.class + "\").set_text(\""+own_text+"\")\n";
-                param_op = 2;
-                param_text = new_attr.content_desc;
+                text       += "iText = \"Navigate to: \" + d(description=\""+new_attr.content_desc+"\", className=\"" + new_attr.class + "\").info['text'] + '<br>'\n";
+                text       += "d(description=\""+new_attr.content_desc+"\", className=\"" + new_attr.class + "\").clear_text()\n";
+                text       += "d(description=\""+new_attr.content_desc+"\", className=\"" + new_attr.class + "\").set_text(\""+own_text+"\")\n";
+                param_op    = 2;
+                param_text  = new_attr.content_desc;
                 param_value = own_text;
             }
             if(text !== '') {
-                text += "d.press.enter()\ntime.sleep(45)\n";
+                text         += "d.press.enter()\ntime.sleep(20)\n";
                 var myconsole = window.parent.document.getElementById('myconsole');
                 $(myconsole).val($(myconsole).val() + text);
                 $.get('/add_text?serial='+serial+'&op='+param_op+'&text='+encodeURIComponent(param_text)+'&value='+param_value+'&class='+new_attr.class, function(data){ 
@@ -71,13 +76,23 @@ $( document ).ready( function( ) {
         }
     });
 
+    var getURL = function(){
+        return $.ajax('/geturl?serial=' + $('#screen').attr('data-serial'), {
+            type: 'GET',
+            async: false,
+            error: function() {
+                console.log('An error occurred');
+            }
+        }).responseText;
+    };
+
     $('#take_screenshot').on('click', function(){
         var own_text  = prompt('Digite el nombre de la imagen');
         if(typeof own_text != 'undefined'){
             own_text      = own_text.toLowerCase().replace(' ', '-').replace('ñ', 'n');
             var d         = new Date();
             var file_path = 'static/screenshots/' + d.getFullYear() + '-' + ("0" + (d.getMonth() + 1)).slice(-2) + '-' + d.getDate() + '/' + own_text;
-            var text      = 'd.screenshot("' + file_path + '.png")\nimg.append("' + file_path + '.png")\n';
+            var text      = 'iText += "Navigate to: ' + getURL() + '<br>"\n' + 'd.screenshot("' + file_path + '.png")\nimg.append("' + file_path + '.png")\n';
             var myconsole = window.parent.document.getElementById('myconsole');
             $(myconsole).val($(myconsole).val() + text);
         }
@@ -107,7 +122,7 @@ $( document ).ready( function( ) {
             myindex = Math.round(((parseInt(coords[3]) - parseInt(coords[1])) / 2) + parseInt(coords[1]));
             text += "d.click("+param_text+", "+myindex+")\n";
         }
-        text += "time.sleep(45)\n"
+        text += "time.sleep(20)\n"
         var myconsole = window.parent.document.getElementById('myconsole');
         $(myconsole).val($(myconsole).val() + text);
         $.get('/click?serial='+serial+'&op='+param_op+'&text='+param_text+'&index='+myindex, function(data){
@@ -141,7 +156,7 @@ $( document ).ready( function( ) {
         var serial = $('#screen').attr('data-serial');
         if(ok) {
             var text = "d.click("+x+", "+y+")\n";
-            text += "time.sleep(45)\n"
+            text += "time.sleep(20)\n"
             var myconsole = window.parent.document.getElementById('myconsole');
             $(myconsole).val($(myconsole).val() + text);
             $.get('/click?serial='+serial+'&op=3&text='+x+'&index='+y, function(data){
@@ -155,7 +170,6 @@ $( document ).ready( function( ) {
             posY = $(this).offset().top;
         $('#mvcoords').text(Math.round(e.pageX - posX) + ' , ' + Math.round(e.pageY - posY));
     });
-
 
     $('.show-info').on('click',function(){
         /**

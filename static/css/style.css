@@ -1,4 +1,8 @@
-a{
+body { 
+    padding-top: 70px;
+}
+
+.row a {
 	cursor:pointer;
 	font-size: 0.8em;
 }

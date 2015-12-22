@@ -28,7 +28,7 @@ $( document ).ready( function( ) {
                 console.log('Error:' +  data);
             }
         }).done(function(data) {
-            //console.log(data);
+            console.log('Done.');
         });
 
         var str = 'from uiautomator import Device\n';
@@ -39,7 +39,7 @@ $( document ).ready( function( ) {
                 
         str += 'os.popen("adb -s ' + serial + ' shell pm clear com.android.chrome").read()\n';
         str += 'os.popen("adb -s ' + serial + ' shell am start -a android.intent.action.VIEW -n com.android.chrome/com.google.android.apps.chrome.Main -d http://www.google.com/").read()\n';
-        str += 'd = Device("' + serial + '")\nimg = []\n';
+        str += 'd = Device("' + serial + '")\nimg = []\niText = ""\n';
         $('#myconsole').val(str);
     });
 
@@ -52,7 +52,7 @@ $( document ).ready( function( ) {
         }
         var subject = $('#subject').val();
         emails      = aEmails.join(', ');
-        info       += "myemail.mail(\""+emails+"\", \""+subject+"\", \""+subject+"\", img)\nmyemail.clean(img)\n";
+        info       += "myemail.mail(\""+emails+"\", \""+subject+"\", iText, img)\nmyemail.clean(img)\n";
         $('#myconsole').val(info);
      });
 });
